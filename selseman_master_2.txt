@@ -1,0 +1,11 @@
+create table selseman_master_2(selsemanno varchar2(6),selsemanname varchar2(20),address1 varchar2(30),address2 varchar2(30),city varchar2(20),pincode number(8),state varchar2(20),salamt number(8,2),tgttoget number(6,2),ytdselse number(6,2),remarks varchar2(60));
+
+insert into selseman_master_2 values('s00001','aman','A/14','worli','mumbai',400002,'maharastra',3000,100,50,'good');
+insert into selseman_master_2 values('s00002','omkar','65','nariman','mumbai',400001,'maharastra',3000,200,100,'good');
+insert into selseman_master_2 values('s00003','raj','P-7','bandra','mumbai',400032,'maharastra',3000,200,100,'good');
+insert into selseman_master_2 values('s00004','ashish','A/5','juha','mumbai',400044,'maharastra',3000,200,100,'good');
+
+select * from  selseman_master_2 ;
+
+
+

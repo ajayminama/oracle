@@ -1,0 +1,21 @@
+
+
+
+create role sybca;
+grant select,insert,update on emp to sybca;
+
+create user dhruv identified by manager;
+create user vivek identified by manager;
+create user gopal identified by manager;
+
+grant sybca to dhruv;
+grant sybca to vivek;
+grant sybca to gopal;
+
+select * from emp;
+
+revoke sybca from dhruv;
+
+
+
+

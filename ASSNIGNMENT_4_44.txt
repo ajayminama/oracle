@@ -1,0 +1,376 @@
+ create table client_master_23
+(
+     clientno varchar(6)primary key,
+     name varchar(15)not null,
+     address1 varchar(5),
+     address2 varchar(5),
+     city varchar(15),
+     pincode number(6),
+     state varchar(15),
+     baldue number(10,2),
+     constraint chk_client check (clientno like 'C%')
+);
+
+insert into client_master_23 values('C00001','rakesh joshi','null','null','mumbai',400054,'maharastra',15000);
+
+insert into client_master_23 values ('C00002','mayur patel','null','null','madras',780001,'tamilnadu',0);
+
+insert into client_master_23 values ('C00003','ishita maheta','null','null','mumbai',400057,'maharastra',5000);
+
+insert into client_master_23 values ('C00004','amit solanki','null','null','banglore',560001,'karnataka',0);
+
+insert into client_master_23 values ('C00005','hiren pandya','null','null','mumbai',400060,'maharastra',2000);
+
+insert into client_master_23 values ('C00006','dipak sharma','null','null','mangalore',560050,'karnataka',0);
+
+select * from client_master_23;
+
+
+
+=====================================================
+create table product_master_23
+  (
+     productno varchar2(6)primary key,
+     description varchar2(15)not null,
+     profitpercent number(4,2)not null,
+     unitmaster varchar2(7)not null,
+     qtyonhand number(4)not null,
+     reorderlvl number(3)not null,
+     sellprice number(5,2)not null,
+     costprice number(5,2)not null,
+     constraint chk_productno check(productno like 'P%'),
+     constraint sellprice check(sellprice!=0),
+     constraint costprice check(costprice!=0)
+  );
+
+insert into product_master_23 values('P00001','t-shirts',5,'piece',200,50,350,250);
+
+insert into product_master_23 values('P0345','shirts',6,'piece',150,50,500,350);
+
+insert into product_master_23 values('P06734','cotton jeans',5,'piece',100,20,500,450);
+
+insert into product_master_23 values('P07865','jeans',5,'piece',100,20,750,500);
+
+insert into product_master_23 values('P07868','trousers',2,'piece',80,30,700,450);
+
+insert into product_master_23 values('P07885','pull overs',2.5,'piece',80,30,700,450);
+
+insert into product_master_23 values('P07965','denim shirt',4,'piece',100,40,350,250);
+
+insert into product_master_23 values('P07975','lycra tops',5,'piece',70,30,300,175);
+
+insert into product_master_23 values('P08865','skirts',5,'piece',75,30,450,300);
+
+select * from product_master_23 ;
+
+
+======================================================
+create table salesman_master_23
+(
+  salesmanno varchar2(6)primary key,
+  salesmanname varchar2(15)not null,
+  address1 varchar2(10)not null,
+  address2 varchar2(10),
+  city varchar2(10),
+  pincode number(6),
+  state varchar2(12),
+  salamt number(8,2)not null,
+  tgttoget number(6,2)not null,
+  ytdsales number(6,2)not null,
+  remarks varchar2(10),
+  constraint chk_salesmanno check(salesmanno like'S%'),
+  constraint chk_salamt check(salamt!=0),
+  constraint chk_tgttoget check(tgttoget!=0),
+  constraint chk_ytdsales check(ytdsales!=0)
+);
+
+insert into salesman_master_23 values('S00001','aman','A/14','worli','mumbai',400002,'maharastra',3000,100,50,'good');
+
+insert into salesman_master_23 values('S00002','omkar','65','nariman','mumbai',400001,'maharastra',3000,200,100,'good');
+
+insert into salesman_master_23 values('S00003','raj','P-7','bandra','mumbai',400032,'maharastra',3000,200,100,'good');
+
+insert into salesman_master_23 values('S00004','ashish','A/5','juha','mumbai',400044,'maharastra',3000,200,100,'good');
+
+select * from salesman_master_23 
+
+=====================================
+create table sales_order_23
+  (
+  orderno varchar(6)primary key,
+  clientno varchar(6) references client_master_23,
+  orderdate date not null,
+  delyaddr varchar(20),
+  salesmanno varchar(6) references salesman_master_23,
+  delytype char(1),
+  billyn char(1),
+  delydate date,
+  orderstatus varchar(10),
+  constraint chk_orderno check (orderno like 'O%'),
+  constraint chk_delytype check (delytype in('p','f')),
+  constraint chk_delydate check (delydate>orderdate),
+  constraint chk_orderstatus check (orderstatus in('in process','fulfilled','backorder','cancelled'))
+
+);
+
+
+
+
+insert into sales_order_23 values ('O19001','C00001',TO_DATE('12-JUNE-04', 'DD-MON-RR'),null,'S00001','f','n',TO_DATE('20-july-04', 'DD-MON-RR'),'in process');
+
+insert into sales_order_23 values ('O19002','C00002',TO_DATE('25-JUNE-04', 'DD-MON-RR'),null,'S00002','p','n',TO_DATE('27-june-04', 'DD-MON-RR'),'cancelled');
+
+insert into sales_order_23 values ('O46865','C00003',TO_DATE('18-feb-04', 'DD-MON-RR'),null,'S00003','f','y',TO_DATE('20-feb-04', 'DD-MON-RR'),'fulfilled');
+
+insert into sales_order_23 values ('O19003','C00004',TO_DATE('03-apr-02', 'DD-MON-RR'),null,'S00001','f','y',TO_DATE('07-apr-02', 'DD-MON-RR'),'fulfilled');
+
+insert into sales_order_23 values ('O46866','C00005',TO_DATE('20-may-04', 'DD-MON-RR'),null,'S00002','p','n',TO_DATE('22-may-04', 'DD-MON-RR'),'cancelled');
+
+insert into sales_order_23 values ('O19008','C00006',TO_DATE('20-may-04', 'DD-MON-RR'),null,'S00004','f','n',TO_DATE('26-july-04', 'DD-MON-RR'),'fulfilled');
+
+
+select * from sales_order_23 ;
+
+===================================================
+
+  create table sales_order_details_23
+ (
+    orderno varchar(6) references sales_order_23,
+    productno varchar(6) references product_master_23,
+    qtyordered number(8),
+    qtydisp number(8),
+    productrate number(10,2)
+ );
+
+insert into sales_order_details_23 values('O19001','P00001',4,4,525);
+
+insert into sales_order_details_23 values('O19001','P07965',2,1,8400);
+
+insert into sales_order_details_23 values('O19001','P07885',2,1,5250);
+
+insert into sales_order_details_23 values('O19002','P00001',10,0,525);
+
+insert into sales_order_details_23 values('O46865','P07868',3,3,3150);
+
+insert into sales_order_details_23 values('O46865','P07885',3,1,5250);
+
+insert into sales_order_details_23 values('O46865','P00001',10,10,525);
+
+insert into sales_order_details_23 values('O46865','P0345',4,4,1050);
+
+insert into sales_order_details_23 values('O19003','P03453',2,2,1050);
+
+insert into sales_order_details_23 values('O19003','P06734',1,1,12000);
+
+insert into sales_order_details_23 values('O46866','P07965',1,0,8400);
+
+insert into sales_order_details_23 values('O46866','P07975',1,0,1050);
+
+insert into sales_order_details_23 values('O19008','P00001',10,5,525);
+
+insert into sales_order_details_23 values('O19008','P07975',5,3,1050);
+
+
+select * from sales_order_details_23 ;
+
+
+
+query 
+
+AAAAAA
+===========
+select * from client_master_23 where name like '_a%';
+select * from client_master_23 where city like 'm%';
+select * from client_master_23 where city in ('banglore','mangalore');
+select * from client_master_23  where baldue > 10000;
+select * from sales_order_23 where to_char (orderdate, 'month') like 'june%';
+select * from client_master_23 where clientno in ('C00001','C00002');
+select * from product_master_23 where sellprice > 500 and sellprice <= 750;
+select * from product_master_23 where sellprice > 500;
+select description,sellprice,sellprice*0.15 from product_master_23;
+select description,sellprice,sellprice*0.15 as new_price from product_master_23;
+select name, city,state from client_master_23 where not state = 'maharastra'; 
+SELECT AVG(SellPrice) AS average_price FROM Product_MASTER_23;
+SELECT MAX(SellPrice) AS max_price, MIN(SellPrice) AS min_price FROM Product_MASTER_23;
+SELECT COUNT(*) AS product_count FROM Product_MASTER_23 WHERE SellPrice <= 500;
+SELECT * FROM Product_MASTER_23 WHERE QtyOnHand < REORDERLVL;
+
+BBBB
+===========
+[B]
+
+
+SELECT ORDERNO, TO_CHAR(ORDERDATE, 'DAY') AS DAY FROM SALES_ORDER_23;
+
+SELECT ORDERNO,TO_CHAR(DELYDATE, 'MONTH') AS MONTH, DELYDATE FROM SALES_ORDER_23;
+
+SELECT ORDERNO, TO_CHAR(ORDERDATE, 'DD-Month-YY') AS ORDER_DATE FROM SALES_ORDER_23;
+
+SELECT SYSDATE + 15 AS DATE_AFTER_15_DAYS FROM DUAL;
+
+[C]
+
+SELECT P.DESCRIPTION,SUM(S.QTYDISP) AS TOTAL_QTY_SOLD FROM PRODUCT_MASTER_23 P, SALES_ORDER_DETAILS_23 S 
+WHERE P.PRODUCTNO = S.PRODUCTNO
+GROUP BY P.DESCRIPTION;
+
+SELECT PRODUCTNO,
+SUM(QTYDISP * PRODUCTRATE) AS VALUE_SOLD
+FROM SALES_ORDER_DETAILS_23
+GROUP BY PRODUCTNO;
+
+SELECT O.CLIENTNO,
+AVG(D.QTYDISP) AS AVG_QTY_SOLD
+FROM SALES_ORDER_23 O, SALES_ORDER_DETAILS_23 D
+WHERE O.ORDERNO = D.ORDERNO
+GROUP BY O.CLIENTNO
+HAVING SUM(D.QTYDISP * D.PRODUCTRATE) = 15000;
+
+SELECT SUM(D.QTYDISP * D.PRODUCTRATE) AS TOTAL_BILLED_ORDERS
+FROM SALES_ORDER_23 O, SALES_ORDER_DETAILS_23 D
+WHERE O.ORDERNO = D.ORDERNO
+AND O.BILLYN = 'Y'
+AND TO_CHAR(O.ORDERDATE,'MON') = 'JUN';
+
+[D]
+
+SELECT P.PRODUCTNO, P.DESCRIPTION
+FROM CLIENT_MASTER_23 C,
+ SALES_ORDER_23 O,
+ SALES_ORDER_DETAILS_23 D,
+PRODUCT_MASTER_23 P
+WHERE C.CLIENTNO = O.CLIENTNO
+AND O.ORDERNO = D.ORDERNO
+AND D.PRODUCTNO = P.PRODUCTNO
+AND C.NAME = 'Rakesh Joshi';
+
+
+SELECT P.PRODUCTNO,
+  P.DESCRIPTION,
+D.QTYORDERED - D.QTYDISP AS QTY_TO_DELIVER
+FROM PRODUCT_MASTER_23 P,
+     SALES_ORDER_DETAILS_23 D,
+     SALES_ORDER_23 O
+WHERE P.PRODUCTNO = D.PRODUCTNO
+AND D.ORDERNO = O.ORDERNO
+AND TO_CHAR(O.DELYDATE,'MM-YYYY') = TO_CHAR(SYSDATE,'MM-YYYY')
+AND D.QTYORDERED > D.QTYDISP;
+
+SELECT P.PRODUCTNO,
+       P.DESCRIPTION
+FROM PRODUCT_MASTER_23 P,
+     SALES_ORDER_DETAILS_23 D
+WHERE P.PRODUCTNO = D.PRODUCTNO
+GROUP BY P.PRODUCTNO, P.DESCRIPTION
+HAVING COUNT(D.ORDERNO) > 1;
+
+SELECT C.NAME
+FROM CLIENT_MASTER_23 C,
+     SALES_ORDER_23 O,
+     SALES_ORDER_DETAILS_23 D,
+     PRODUCT_MASTER_23 P
+WHERE C.CLIENTNO = O.CLIENTNO
+AND O.ORDERNO = D.ORDERNO
+AND D.PRODUCTNO = P.PRODUCTNO
+AND P.DESCRIPTION = 'Trousers';
+
+SELECT D.ORDERNO,
+       P.PRODUCTNO,
+       P.DESCRIPTION,
+       D.QTYORDERED
+FROM SALES_ORDER_DETAILS_23 D,
+     PRODUCT_MASTER_23 P
+WHERE D.PRODUCTNO = P.PRODUCTNO
+AND P.DESCRIPTION = 'Pull Overs'
+AND D.QTYORDERED < 5;
+
+SELECT C.NAME,
+       P.PRODUCTNO,
+       P.DESCRIPTION,
+       D.QTYORDERED
+FROM CLIENT_MASTER_23 C,
+     SALES_ORDER_23 O,
+     SALES_ORDER_DETAILS_23 D,
+     PRODUCT_MASTER_23 P
+WHERE C.CLIENTNO = O.CLIENTNO
+AND O.ORDERNO = D.ORDERNO
+AND D.PRODUCTNO = P.PRODUCTNO
+AND C.NAME IN ('Rakesh Joshi','Mayur Patel');
+
+SELECT O.CLIENTNO,
+       P.PRODUCTNO,
+       P.DESCRIPTION,
+       D.QTYORDERED
+FROM SALES_ORDER_23 O,
+     SALES_ORDER_DETAILS_23 D,
+     PRODUCT_MASTER_23 P
+WHERE O.ORDERNO = D.ORDERNO
+AND D.PRODUCTNO = P.PRODUCTNO
+AND O.CLIENTNO IN ('C00001','C00002');
+
+[E]
+
+SELECT PRODUCTNO, DESCRIPTION
+FROM PRODUCT_MASTER_23
+WHERE PRODUCTNO NOT IN
+(
+    SELECT PRODUCTNO
+    FROM SALES_ORDER_DETAILS_23
+);
+
+SELECT NAME AS CUSTOMERNAME,
+       ADDRESS1,
+       ADDRESS2,
+       CITY,
+       PINCODE
+FROM CLIENT_MASTER_23
+WHERE CLIENTNO =
+(
+    SELECT CLIENTNO
+    FROM SALES_ORDER_23
+    WHERE ORDERNO = 'O19001'
+);
+
+SELECT NAME
+FROM CLIENT_MASTER_23
+WHERE CLIENTNO IN
+(
+    SELECT CLIENTNO
+    FROM SALES_ORDER_23
+    WHERE ORDERDATE < TO_DATE('01-MAY-04','DD-MON-YY')
+);
+
+SELECT CLIENTNO, NAME
+FROM CLIENT_MASTER_23
+WHERE CLIENTNO IN
+(
+    SELECT CLIENTNO
+    FROM SALES_ORDER_23
+    WHERE ORDERNO IN
+    (
+        SELECT ORDERNO
+        FROM SALES_ORDER_DETAILS_23
+        WHERE PRODUCTNO =
+        (
+            SELECT PRODUCTNO
+            FROM PRODUCT_MASTER_23
+            WHERE DESCRIPTION = 'Lycra Tops'
+        )
+    )
+);
+SELECT NAME
+FROM CLIENT_MASTER_23
+WHERE CLIENTNO IN
+(
+    SELECT O.CLIENTNO
+    FROM SALES_ORDER_23 O,
+         SALES_ORDER_DETAILS_23 D
+    WHERE O.ORDERNO = D.ORDERNO
+    GROUP BY O.CLIENTNO
+    HAVING SUM(D.QTYORDERED * D.PRODUCTRATE) >= 10000
+);
+
+
+
+
+

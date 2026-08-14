@@ -1,0 +1,9 @@
+select name from client_master_2;
+output :
+NAME
+rakesh joshi
+mayur joshi
+ishita maheta
+amit solanki
+hiren pandya
+dipak sharma
